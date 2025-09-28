@@ -31,12 +31,12 @@ export default function EsqueciSenha() {
         
       </View>
 
-      {/* Texto de instrução */}
+      
       <Text style={styles.subtitle}>
         Digite seu e-mail para receber o link de redefinição de senha
       </Text>
 
-      {/* Campo de Email */}
+      
       <TextInput
         style={styles.input}
         placeholder="Digite seu e-mail"
@@ -63,7 +63,7 @@ export default function EsqueciSenha() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#001942", // Azul escuro fundo
+    backgroundColor: "#001942", 
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
@@ -72,10 +72,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 40,
   },
-  // Aqui você controla o tamanho da logo:
+  
   logo: {
-    width: 250,  // <<< largura da logo
-    height: 120, // <<< altura da logo
+    width: 250,  
+    height: 120, 
     marginBottom: 10,
     
   },
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    backgroundColor: "#0052CC", // Azul do botão
+    backgroundColor: "#0052CC", 
     paddingVertical: 15,
     borderRadius: 8,
     width: "100%",
