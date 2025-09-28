@@ -12,7 +12,7 @@ import {
 
 import logoImage from "./assets/logo.png";
 
-export default function EsqueciSenha() {
+export default function TelaEsqueciSenha() {
   const [email, setEmail] = useState("");
 
   const handleEnviar = () => {
@@ -21,12 +21,12 @@ export default function EsqueciSenha() {
 
   return (
     <View style={styles.container}>
-      {/* Logo */}
+      
       <View style={styles.logoContainer}>
         <Image
           source={logoImage}
           style={styles.logo}
-          resizeMode="contain" // mantém a proporção
+          resizeMode="contain" 
         />
         
       </View>
