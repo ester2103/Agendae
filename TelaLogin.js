@@ -6,6 +6,26 @@ export default function TelaLogin({navigation}) {
   const [text_email, setText_email] = useState('');
   const [text_senha, setText_senha] = useState('');
 
+  const handleLogin = () => {
+    if (!text_email || !text_senha) {
+      Alert.alert('Atenção', 'Preencha todos os campos.');
+      return;
+    }
+
+    auth.signInWithEmailAndPassword(text_email, text_senha)
+      .then((userCredential) => {
+        Alert.alert('Sucesso', `Bem-vindo, ${userCredential.user.email}`);
+        navigation.navigate('Home'); // redireciona para a tela inicial
+      })
+      .catch((error) => {
+        let msg = 'Erro ao fazer login';
+        if (error.code === 'auth/invalid-email') msg = 'Email inválido';
+        else if (error.code === 'auth/user-not-found') msg = 'Usuário não encontrado';
+        else if (error.code === 'auth/wrong-password') msg = 'Senha incorreta';
+        Alert.alert('Falha no login', msg);
+      });
+  };
+
   return(
     <View style ={styles.container}>
 
