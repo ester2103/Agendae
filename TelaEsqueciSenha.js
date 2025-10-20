@@ -11,12 +11,30 @@ import {
 
 
 import logoImage from "./assets/logo.png";
+import { auth } from './firebaseConfig'; 
 
 export default function TelaEsqueciSenha() {
   const [email, setEmail] = useState("");
 
-  const handleEnviar = () => {
-    Alert.alert("Código enviado", `Enviamos um código para ${email}`);
+ const handleEnviar = () => {
+    if (!email) {
+      Alert.alert("Atenção", "Digite seu e-mail.");
+      return;
+    }
+
+    auth.sendPasswordResetEmail(email)
+      .then(() => {
+        Alert.alert(
+          "Sucesso",
+          `Enviamos um link de redefinição de senha para ${email}`
+        );
+      })
+      .catch((error) => {
+        let msg = "Erro ao enviar link";
+        if (error.code === "auth/invalid-email") msg = "Email inválido";
+        else if (error.code === "auth/user-not-found") msg = "Usuário não encontrado";
+        Alert.alert("Falha", msg);
+      });
   };
 
   return (
