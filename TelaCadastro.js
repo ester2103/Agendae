@@ -8,6 +8,31 @@ export default function TelaCadastro({navigation}) {
   const [text_senha, setText_senha] = useState('');
   const [text_ConfirmarSenha, setText_ConfirmarSenha] = useState('');
 
+  const handleCadastro = () => {
+    if (!text_nome || !text_email || !text_senha || !text_ConfirmarSenha) {
+      Alert.alert('Atenção', 'Preencha todos os campos.');
+      return;
+    }
+
+    if (text_senha !== text_ConfirmarSenha) {
+      Alert.alert('Erro', 'As senhas não coincidem.');
+      return;
+    }
+
+    auth.createUserWithEmailAndPassword(text_email, text_senha)
+      .then((userCredential) => {
+        Alert.alert('Sucesso', `Conta criada: ${userCredential.user.email}`);
+        navigation.navigate('Login');
+      })
+      .catch((error) => {
+        let msg = 'Erro ao criar conta';
+        if (error.code === 'auth/email-already-in-use') msg = 'Email já cadastrado';
+        else if (error.code === 'auth/invalid-email') msg = 'Email inválido';
+        else if (error.code === 'auth/weak-password') msg = 'Senha muito fraca';
+        Alert.alert('Falha no cadastro', msg);
+      });
+  };
+
   return(
     <View style ={styles.container}>
     <Image style ={styles.imagem} source={require('./assets/agendae.png')} />
