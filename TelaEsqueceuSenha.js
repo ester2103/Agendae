@@ -13,7 +13,7 @@ import {
 import logoImage from "./assets/logo.png";
 import { auth } from './firebaseConfig'; 
 
-export default function TelaEsqueciSenha() {
+export default function TelaEsqueceuSenha() {
   const [email, setEmail] = useState("");
 
  const handleEnviar = () => {
