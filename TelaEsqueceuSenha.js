@@ -1,20 +1,14 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Alert,
-} from "react-native";
-
-
-import logoImage from "./assets/logo.png";
+import { Card } from 'react-native-paper';
+import React, { useState } from 'react';
+import { Image, View, TextInput, Text, Linking, TouchableOpacity } from 'react-native';
+import styles from './Styles'
 import { auth } from './firebaseConfig'; 
 
-export default function TelaEsqueceuSenha() {
-  const [email, setEmail] = useState("");
+
+function TelaEsqueceuSenha({navigation}) {
+
+const [text_email, setText_email] = useState('');
+const [text_senha, setText_senha] = useState('');
 
  const handleEnviar = () => {
     if (!email) {
@@ -36,101 +30,42 @@ export default function TelaEsqueceuSenha() {
         Alert.alert("Falha", msg);
       });
   };
+  
 
   return (
     <View style={styles.container}>
-      
-      <View style={styles.logoContainer}>
-        <Image
-          source={logoImage}
-          style={styles.logo}
-          resizeMode="contain" 
-        />
-        
+
+    <View style={styles.containerlogin}>
+      <Image style={styles.imagem} source={require('/assets/agendae.png')}/>
+    </View>
+
+    <View style={styles.container_texto}>
+      <Text style={styles.texto_esqueceuSenha}>Um link será enviado para o seu email para você ter acesso à sua conta novamente.</Text>
+    </View>
+
+        <TextInput
+        style={styles.input}
+        value={text_email}
+        placeholder="Email"
+        placeholderTextColor = 'gray'
+        onChangeText={setText_email}/>
+
+      <View style={styles.botao_cadastrar}>
+        <TouchableOpacity style={styles.botao_cadastrar} onPress={() => navigation.navigate('')}>
+          <Text style={styles.texto_botao}>Enviar link</Text>
+        </TouchableOpacity>
       </View>
 
+      <View style={styles.linha}></View>
+
+      <View style={styles.botao_entrar}>
+        <TouchableOpacity style={styles.botao_entrar} onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.texto_entrar}>Voltar ao login</Text>
+        </TouchableOpacity>
+      </View>
       
-      <Text style={styles.subtitle}>
-        Digite seu e-mail para receber o link de redefinição de senha
-      </Text>
-
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Digite seu e-mail"
-        placeholderTextColor="#666"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-
-      {/* Botão Enviar */}
-      <TouchableOpacity style={styles.button} onPress={handleEnviar}>
-        <Text style={styles.buttonText}>Enviar link</Text>
-      </TouchableOpacity>
-
-      {/* Link Voltar */}
-      <TouchableOpacity>
-        <Text style={styles.linkText}>Voltar para o login</Text>
-      </TouchableOpacity>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#001942", 
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20,
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginBottom: 40,
-  },
-  
-  logo: {
-    width: 250,  
-    height: 120, 
-    marginBottom: 10,
-    
-  },
-  title: {
-    fontSize: 28,
-    color: "#FFFFFF",
-    fontWeight: "bold",
-  },
-  subtitle: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  input: {
-    width: "100%",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 20,
-  },
-  button: {
-    backgroundColor: "#0052CC", 
-    paddingVertical: 15,
-    borderRadius: 8,
-    width: "100%",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  linkText: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    textDecorationLine: "underline",
-  },
-});
+export default TelaEsqueceuSenha;
