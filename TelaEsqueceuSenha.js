@@ -1,71 +1,73 @@
-import { Card } from 'react-native-paper';
 import React, { useState } from 'react';
-import { Image, View, TextInput, Text, Linking, TouchableOpacity } from 'react-native';
-import styles from './Styles'
-import { auth } from './firebaseConfig'; 
+import {  View,  Text,  TextInput,  TouchableOpacity,  Alert,  Image } from 'react-native';
+import { firebase } from './firebaseConfig';
+import styles from './Styles';
 
 
-function TelaEsqueceuSenha({navigation}) {
+export default function TelaEsqueceuSenha({ navigation }) {
+  const [email, setEmail] = useState('');
 
-const [text_email, setText_email] = useState('');
-const [text_senha, setText_senha] = useState('');
-
- const handleEnviar = () => {
+  const handleEnviar = () => {
     if (!email) {
-      Alert.alert("Atenção", "Digite seu e-mail.");
+      Alert.alert('Atenção', 'Digite seu e-mail.');
       return;
     }
 
-    auth.sendPasswordResetEmail(email)
+    firebase
+      .auth()
+      .sendPasswordResetEmail(email)
       .then(() => {
         Alert.alert(
-          "Sucesso",
+          'Sucesso',
           `Enviamos um link de redefinição de senha para ${email}`
         );
       })
       .catch((error) => {
-        let msg = "Erro ao enviar link";
-        if (error.code === "auth/invalid-email") msg = "Email inválido";
-        else if (error.code === "auth/user-not-found") msg = "Usuário não encontrado";
-        Alert.alert("Falha", msg);
+        let msg = 'Erro ao enviar link';
+        if (error.code === 'auth/invalid-email') msg = 'Email inválido';
+        else if (error.code === 'auth/user-not-found') msg = 'Usuário não encontrado';
+        Alert.alert('Falha', msg);
       });
   };
-  
 
   return (
     <View style={styles.container}>
+      <View style={styles.containerlogin}>
+        <Image
+          source={require('./assets/agendae.png')}
+          style={styles.imagem}
+        />
+      </View>
 
-    <View style={styles.containerlogin}>
-      <Image style={styles.imagem} source={require('/assets/agendae.png')}/>
-    </View>
+      <View style={styles.container_texto}>
+        <Text style={styles.texto_esqueceuSenha}>
+          Um link será enviado para o seu email para você ter acesso à sua conta novamente.
+        </Text>
+      </View>
 
-    <View style={styles.container_texto}>
-      <Text style={styles.texto_esqueceuSenha}>Um link será enviado para o seu email para você ter acesso à sua conta novamente.</Text>
-    </View>
-
-        <TextInput
+      <TextInput
         style={styles.input}
-        value={text_email}
+        value={email}
         placeholder="Email"
-        placeholderTextColor = 'gray'
-        onChangeText={setText_email}/>
+        placeholderTextColor="gray"
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        keyboardType="email-address"
+      />
 
       <View style={styles.botao_cadastrar}>
-        <TouchableOpacity style={styles.botao_cadastrar} onPress={() => navigation.navigate('')}>
+        <TouchableOpacity onPress={handleEnviar}>
           <Text style={styles.texto_botao}>Enviar link</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.linha}></View>
+      <View style={styles.linha} />
 
       <View style={styles.botao_entrar}>
-        <TouchableOpacity style={styles.botao_entrar} onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={styles.texto_entrar}>Voltar ao login</Text>
         </TouchableOpacity>
       </View>
-      
     </View>
   );
 }
-
-export default TelaEsqueceuSenha;
