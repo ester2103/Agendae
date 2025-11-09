@@ -1,19 +1,26 @@
-import React from 'react';
-import {useCallback, useEffect, useState} from 'react';
+import React, { useEffect } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {StyleSheet, Text, View, Image} from 'react-native';
-import styles from './Styles';
+
+import { configureNotifications } from './notifications.js';
+
 import TelaLogo from './TelaLogo';
 import TelaLogin from './TelaLogin';
 import TelaCadastro from './TelaCadastro';
 import TelaMeuPerfil from './TelaMeuPerfil';
 import TelaEsqueceuSenha from './TelaEsqueceuSenha';
-import TelaCriarAtividade from './TelaCriarAtividade';
+import TelaAtividades from './TelaAtividades';
+import TelaCadastrarAtividade from './TelaCadastrarAtividade';
+import TelaCalendario from './TelaCalendario';
+import TelaMenuPrincipal from './TelaMenuPrincipal';
+import DetalhesAtividade from './DetalhesAtividade'
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  useEffect(() => {
+    configureNotifications();
+  }, []);
   
   return (
     <NavigationContainer>
@@ -24,7 +31,12 @@ export default function App() {
     <Stack.Screen name="Cadastro" component={TelaCadastro} />
     <Stack.Screen name="MeuPerfil"component={TelaMeuPerfil} />
     <Stack.Screen name="EsqueceuSenha" component={TelaEsqueceuSenha} />
-    <Stack.Screen name="CriarAtividade" component={TelaCriarAtividade} />
+    <Stack.Screen name="Atividades" component={TelaAtividades} />
+    <Stack.Screen name="CadastrarAtividade" component={TelaCadastrarAtividade} />
+    <Stack.Screen name="Calendario" component={TelaCalendario} />
+    <Stack.Screen name="MenuPrincipal" component={TelaMenuPrincipal} />
+    <Stack.Screen name="DetalhesAtividade" component={DetalhesAtividade} />
+    
     </Stack.Navigator>
 
     </NavigationContainer>
