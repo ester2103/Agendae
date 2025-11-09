@@ -1,5 +1,7 @@
 import {StyleSheet} from 'react-native';
+
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -7,13 +9,22 @@ const styles = StyleSheet.create({
     backgroundColor: "#001c44",
   },
 
- containerlogo: {
- justifyContent: 'center',
- alignItems: 'center',
- backgroundColor: "#001c44",
- width: 200,
- height: 200,
- },
+  containerCalendario: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "#ffffff",
+    width: '97%',
+    alignSelf: 'center',
+    transform: [{ scale: 0.8 }],
+  },
+
+  containerlogo: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "#001c44",
+    width: 200,
+    height: 200,
+  },
 
   containeragendae: {
     padding: 40
@@ -53,9 +64,9 @@ const styles = StyleSheet.create({
   
   linha: {
     backgroundColor: '#7F8386',
-    width: 360,
+    width: '100%',
     height: 1,
-    marginVertical: 30
+    marginVertical: 30,
   },
 
   input: {
@@ -66,6 +77,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingLeft: 10,
     paddingRight:  1,
+  },
+
+  containerlogoprincipal: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#3A4B7A",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  tituloDataPrincipal: {
+    color: '#FFFFFF',
+    fontSize: 30,
+    fontWeight: '500',
+    paddingLeft: 20,
   },
 
   inputContainer: {
@@ -79,9 +105,9 @@ const styles = StyleSheet.create({
   },
 
   inputWrapper: {
-  position: 'relative',
-  width: 306, // igual ao TextInput
-  marginBottom: 15,
+    position: 'relative',
+    width: 306,
+    marginBottom: 15,
   },
 
   texto_padrao: {
@@ -119,8 +145,7 @@ const styles = StyleSheet.create({
     fontWeight: 400,
   },
 
-
-    containerMeuPerfil: {
+  containerMeuPerfil: {
     flexGrow: 1,
     backgroundColor: "#001c44",
     paddingBottom: 40,
@@ -132,9 +157,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#3A4B7A",
   },
+
   infoViewMeuPerfil: {
     borderBottomWidth: 1,
     borderBottomColor: "#3A4B7A",
@@ -200,7 +224,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-
   rowButtons: {
     flexDirection: "row",
     gap: 12,
@@ -221,7 +244,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-    container_texto: {
+  container_texto: {
     justifyContent: 'center',
     marginVertical: 20,
     padding: 20,
@@ -234,11 +257,12 @@ const styles = StyleSheet.create({
   },
 
   olhinho: {
-  position: 'absolute',
-  right: 10,
-  top: 11,
+    position: 'absolute',
+    right: 10,
+    top: 11,
   },
-    containerPopupMeuPerfil:{
+
+  containerPopupMeuPerfil: {
     margin: 20,
     backgroundColor: "#06297b",
     borderRadius: 20,
@@ -253,11 +277,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+
   centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-      },
+  },
 
   inputSenhaMeuPerfil: {
     fontSize: 16,
@@ -294,30 +319,47 @@ const styles = StyleSheet.create({
   },
 
   menuWrapper: {
-  width: '100%',
-  paddingHorizontal: 20,
-},
+    width: '100%',
+    paddingHorizontal: 20,
+  },
 
-menuButton: {
-  flexDirection: 'row',         
-  justifyContent: 'space-between', 
-  alignItems: 'center',         
-  
-  borderWidth: 1,               
-  borderColor: '#3A5F8A',       
-  borderRadius: 5,              
-  
-  paddingVertical: 15,         
-  paddingHorizontal: 20,        
-  marginBottom: 15,             
-},
+  menuButton: {
+    flexDirection: 'row',         
+    justifyContent: 'space-between', 
+    alignItems: 'center',         
+    borderWidth: 1,               
+    borderColor: '#3A5F8A',       
+    borderRadius: 5,              
+    paddingVertical: 15,         
+    paddingHorizontal: 20,        
+    marginBottom: 15,             
+  },
 
-menuButtonText: {
-  color: '#FFFFFF',
-  fontSize: 18,
-  fontWeight: '500',
-},
-  
+  menuButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '500',
+  },
+
+  containerBotaoAtividade: {
+    width:"100%",
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingRight: 20,
+    marginTop: 100
+  },
+
+  botaoAtividade: {
+    backgroundColor: '#00419E',
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
+
+  },
+
 });
 
 export default styles;
