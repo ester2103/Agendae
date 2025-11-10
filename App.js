@@ -1,9 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-
-import { configureNotifications } from './notifications.js';
-
 import TelaLogo from './TelaLogo';
 import TelaLogin from './TelaLogin';
 import TelaCadastro from './TelaCadastro';
@@ -18,14 +15,15 @@ import DetalhesAtividade from './DetalhesAtividade'
 const Stack = createStackNavigator();
 
 export default function App() {
-  useEffect(() => {
-    configureNotifications();
-  }, []);
   
   return (
     <NavigationContainer>
     
-    <Stack.Navigator initialRouteName="Home">
+    <Stack.Navigator 
+    initialRouteName="Home"
+    screenOptions={{ headerShown: false }}
+    >
+
     <Stack.Screen name="Home" component={TelaLogo} />
     <Stack.Screen name="Login" component={TelaLogin} />
     <Stack.Screen name="Cadastro" component={TelaCadastro} />
