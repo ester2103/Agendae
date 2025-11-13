@@ -1,25 +1,22 @@
+import React, { useState, useEffect } from 'react';
 import {
-  TextInput,
-  StyleSheet, // Import StyleSheet to create local styles
   Text,
   View,
-  Image,
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
-import { MaterialCommunityIcons } from 'react-native-vector-icons';
-import { useState, useEffect } from 'react';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './Styles';
 import { auth, db, firebase } from './firebaseConfig';
 
 export default function TelaAtividades({ navigation }) {
-  // --- STATE ---
   const [atividades, setAtividades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState(-1);
 
-  // --- DATA FETCHING ---
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) {
@@ -32,7 +29,7 @@ export default function TelaAtividades({ navigation }) {
       .collection('users')
       .doc(user.uid)
       .collection('atividades')
-      .orderBy('tipo', 'asc');
+      .orderBy('createdAt', 'desc');
 
     const unsub = colRef.onSnapshot(
       (snap) => {
@@ -49,8 +46,6 @@ export default function TelaAtividades({ navigation }) {
     return () => unsub();
   }, []);
 
-  // --- HELPER FUNCTIONS ---
-
   const toggleCompleted = async (task) => {
     const user = auth.currentUser;
     if (!user) return;
@@ -61,70 +56,80 @@ export default function TelaAtividades({ navigation }) {
       .collection('atividades')
       .doc(task.id);
 
+    const newValue = !task.completed;
+
+    // otimista
+    setAtividades((prev) =>
+      prev.map((p) => (p.id === task.id ? { ...p, completed: newValue } : p))
+    );
+
     try {
       await docRef.update({
-        completed: !task.completed,
+        completed: newValue,
+        completedAt: newValue ? firebase.firestore.FieldValue.serverTimestamp() : null,
       });
     } catch (err) {
       console.error('Erro ao atualizar tarefa:', err);
+      setAtividades((prev) =>
+        prev.map((p) => (p.id === task.id ? { ...p, completed: task.completed } : p))
+      );
     }
   };
 
   const formatTime = (timestamp) => {
-    if (!timestamp || typeof timestamp.toDate !== 'function') {
-      return 'Sem data';
-    }
-    return timestamp.toDate().toLocaleDateString('pt-BR');
+    if (!timestamp || typeof timestamp.toDate !== 'function') return '';
+    const d = timestamp.toDate();
+    return `${d.getDate().toString().padStart(2, '0')}/${
+      (d.getMonth() + 1).toString().padStart(2, '0')
+    } ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
   };
 
   const handleMenuPress = (index) => {
-    setExpandedIndex((currentIndex) => (currentIndex === index ? -1 : index));
+    setExpandedIndex((current) => (current === index ? -1 : index));
   };
 
-  // --- RENDER FUNCTIONS ---
+  const renderTaskCard = (task) => {
+  const completed = !!task.completed;
 
-  // *** FIXED ***
-  // Changed back to 'localStyles' to match your original function
-  const renderTaskCard = (task, bgColor = '#bff1f5') => {
-    const completed = !!task.completed;
-    const bg = completed ? '#2f5b86' : bgColor;
-    const textColor = completed ? '#e6e6e6' : '#002';
-    return (
-      <View key={task.id} style={[localStyles.card, { backgroundColor: bg }]}>
-        <TouchableOpacity
-          style={localStyles.circle}
-          onPress={() => toggleCompleted(task)}
-        >
-          <MaterialCommunityIcons
-            name={task.completed ? 'check-circle' : 'circle-outline'}
-            size={26}
-            color={task.completed ? '#fff' : '#fff'}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={localStyles.cardBody}
-          onPress={() => navigation.navigate('DetalhesAtividade', { id: task.id })}
-        >
-          <Text
-            numberOfLines={1}
-            style={[
-              localStyles.cardTitle,
-              {
-                color: textColor,
-                textDecorationLine: completed ? 'line-through' : 'none',
-              },
-            ]}
-          >
-            {task.titulo}
-          </Text>
-          <Text style={[localStyles.cardTime, { color: textColor }]}>
-            {formatTime(task.dueDateTimestamp)}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
+  // cores por tipo
+  const colorsByTipo = {
+    'Atividade': '#E4E5EA',
+    'Prova': '#bff1f5',
+    'Trabalho': '#d9d7ff',
   };
+
+  const bgColor = colorsByTipo[task.tipo] || '#f1f1f1';
+  const bg = completed ? '#2f5b86' : bgColor;
+  const textColor = completed ? '#e6e6e6' : '#002';
+
+  return (
+    <View key={task.id} style={[localStyles.card, { backgroundColor: bg }]}>
+      <TouchableOpacity style={localStyles.circle} onPress={() => toggleCompleted(task)}>
+        <MaterialCommunityIcons
+          name={completed ? 'check-circle' : 'circle-outline'}
+          size={26}
+          color="#fff"
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={localStyles.cardBody}
+        onPress={() => navigation.navigate('DetalhesAtividade', { id: task.id })}
+      >
+        <Text
+          numberOfLines={1}
+          style={[localStyles.cardTitle, { color: textColor, textDecorationLine: completed ? 'line-through' : 'none' }]}
+        >
+          {task.titulo}
+        </Text>
+        <Text style={[localStyles.cardTime, { color: textColor }]}>
+          {formatTime(task.dueDateTimestamp)}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 
   if (loading) {
     return (
@@ -134,65 +139,66 @@ export default function TelaAtividades({ navigation }) {
     );
   }
 
-  // --- MAIN RENDER ---
+  const blocos = [
+    { titulo: 'Provas', tipo: 'Prova' },
+    { titulo: 'Trabalhos', tipo: 'Trabalho' },
+    { titulo: 'Atividades', tipo: 'Atividade' },
+    { titulo: 'Arquivadas', tipo: 'Arquivadas' }, // bloco extra
+  ];
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.tituloMeuPerfil}>Minhas atividades</Text>
       <View style={styles.linha}></View>
       <ScrollView>
         <View style={styles.menuWrapper}>
-          {['Provas', 'Trabalhos', 'Atividades', 'Pendentes'].map(
-            (item, index) => {
-              const tasksForThisItem = atividades.filter(
-                (task) => task.tipo === item
-              );
+          {blocos.map((bloco, index) => {
+            let tasksForBloco = [];
 
-              return (
-                <View key={index}>
-                  <TouchableOpacity
-                    style={styles.menuButton}
-                    activeOpacity={0.7}
-                    onPress={() => handleMenuPress(index)}
-                  >
-                    <Text style={styles.menuButtonText}>
-                      {item} ({tasksForThisItem.length})
-                    </Text>
-                    <MaterialCommunityIcons
-                      name={
-                        expandedIndex === index ? 'chevron-up' : 'chevron-down'
-                      }
-                      size={28}
-                      color="#E0E0E0"
-                    />
-                  </TouchableOpacity>
-
-                  {expandedIndex === index && (
-                    <View style={localStyles.contentContainer}>
-                      {tasksForThisItem.length > 0 ? (
-                        tasksForThisItem.map((task) =>
-                          renderTaskCard(task, '#F0F8FF')
-                        )
-                      ) : (
-                        <Text style={localStyles.noTasksText}>
-                          Nenhuma {item.toLowerCase()} encontrada.
-                        </Text>
-                      )}
-                    </View>
-                  )}
-                </View>
+            if (bloco.tipo === 'Arquivadas') {
+              // concluídas
+              tasksForBloco = atividades.filter((task) => task.completed === true);
+            } else {
+              tasksForBloco = atividades.filter(
+                (task) => (task.tipo || '').trim() === bloco.tipo && task.completed !== true
               );
             }
-          )}
+
+            return (
+              <View key={index} style={{ marginBottom: 20 }}>
+                <TouchableOpacity
+                  style={styles.menuButton}
+                  activeOpacity={0.7}
+                  onPress={() => handleMenuPress(index)}
+                >
+                  <Text style={styles.menuButtonText}>
+                    {bloco.titulo} ({tasksForBloco.length})
+                  </Text>
+                  <MaterialCommunityIcons
+                    name={expandedIndex === index ? 'chevron-up' : 'chevron-down'}
+                    size={28}
+                    color="#E0E0E0"
+                  />
+                </TouchableOpacity>
+
+                {expandedIndex === index && (
+                  <View style={localStyles.contentContainer}>
+                    {tasksForBloco.length > 0 ? (
+                      tasksForBloco.map((task) => renderTaskCard(task))
+                    ) : (
+                      <Text style={localStyles.noTasksText}>
+                        Nenhuma {bloco.titulo.toLowerCase()} encontrada.
+                      </Text>
+                    )}
+                  </View>
+                )}
+              </View>
+            );
+          })}
         </View>
       </ScrollView>
 
-      {/* --- BUTTONS --- */}
-
-      {/* *** FIXED ***
-        I've applied your 'styles.containerBotaoAtividade' and added a 
-        'localStyles.floatingButton' to make it float on top.
-        Your 'containerBotoesNavegacao' is already absolute, so it's perfect.
-      */}
+      {/* Botão flutuante: vai para TelaCadastrarAtividade */}
       <View style={[styles.containerBotaoAtividade, localStyles.floatingButton]}>
         <TouchableOpacity
           style={styles.botaoAtividade}
@@ -202,50 +208,37 @@ export default function TelaAtividades({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.containerBotoesNavegacao}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('MenuPrincipal')}
-        >
+      {/* Navegação inferior */}
+      <View style={[styles.containerBotoesNavegacao, { zIndex: 10, backgroundColor: '#001c44' }]}>
+        <TouchableOpacity onPress={() => navigation.navigate('MenuPrincipal')}>
           <MaterialCommunityIcons name="home" size={30} color="#999999" />
         </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Atividades')}
-        >
-          <MaterialCommunityIcons
-            name="file-document-outline"
-            size={30}
-            color="#ffffff"
-          />
+        <TouchableOpacity onPress={() => navigation.navigate('Atividades')}>
+          <MaterialCommunityIcons name="file-document-outline" size={30} color="#ffffff" />
         </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Calendario')}
-        >
-          <MaterialCommunityIcons
-            name="calendar-month"
-            size={30}
-            color="#999999"
-          />
+        <TouchableOpacity onPress={() => navigation.navigate('Calendario')}>
+          <MaterialCommunityIcons name="calendar-month" size={30} color="#999999" />
         </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => navigation.navigate('MeuPerfil')}
-        >
+        <TouchableOpacity onPress={() => navigation.navigate('MeuPerfil')}>
           <MaterialCommunityIcons name="account" size={30} color="#999999" />
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
-// --- LOCAL STYLES ---
-// These styles are now defined INSIDE your file and won't
-// conflict with your main Styles.js
+// --- estilos locais ---
 const localStyles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 10,
     paddingBottom: 10,
+  },
+  floatingButton: {
+    position: 'absolute',
+    bottom: 100,
+    right: 20,
+    width: 60,
+    padding: 20,
   },
   noTasksText: {
     color: '#999',
@@ -256,9 +249,11 @@ const localStyles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
+    padding: 18,
+    borderRadius: 12,
+    marginBottom: 12,
+    width: '100%',
+    alignSelf: 'center',
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -266,9 +261,9 @@ const localStyles = StyleSheet.create({
     shadowRadius: 2,
   },
   circle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,
@@ -283,14 +278,6 @@ const localStyles = StyleSheet.create({
   },
   cardTime: {
     fontSize: 14,
-    marginTop: 3,
-  },
-  floatingButton: {
-    position: 'absolute', // Make it float
-    bottom: 100, // Position it 100px from the bottom (just above the nav bar)
-    right: 20, // Position it 20px from the right
-    marginTop: 0, // Override the 'marginTop: 100' from your Styles.js
-    width: 60, // Ensure the container size matches the button
-    padding: 20,
+    marginTop: 4,
   },
 });
