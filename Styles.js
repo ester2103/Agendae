@@ -10,12 +10,19 @@ const styles = StyleSheet.create({
   },
 
   containerCalendario: {
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: "#ffffff",
-    width: '97%',
+    width: '100%',
+    height: 350,
     alignSelf: 'center',
-    transform: [{ scale: 0.8 }],
+    transform: [{ scale: 0.9 }],
+  },
+
+  containerTelaCalendario: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: "#001c44",
   },
 
   containerlogo: {
@@ -66,7 +73,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#7F8386',
     width: '100%',
     height: 1,
-    marginVertical: 30,
+    marginVertical: 15,
   },
 
   input: {
@@ -80,8 +87,6 @@ const styles = StyleSheet.create({
   },
 
   containerlogoprincipal: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#3A4B7A",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -92,6 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '500',
     paddingLeft: 20,
+    paddingVertical: 10,
   },
 
   inputContainer: {
@@ -149,6 +155,18 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: "#001c44",
     paddingBottom: 40,
+  },
+
+  containerDetalhes: {
+    flexGrow: 1,
+    backgroundColor: "#001c44",
+    paddingBottom: 40,
+    paddingHorizontal: 20,
+  },
+
+  containerAtividade: {
+    flexGrow: 1,
+    backgroundColor: "#001c44",
   },
 
   tituloMeuPerfil: {
@@ -324,15 +342,16 @@ const styles = StyleSheet.create({
   },
 
   menuButton: {
-    flexDirection: 'row',         
-    justifyContent: 'space-between', 
-    alignItems: 'center',         
-    borderWidth: 1,               
-    borderColor: '#3A5F8A',       
-    borderRadius: 5,              
-    paddingVertical: 15,         
-    paddingHorizontal: 20,        
-    marginBottom: 15,             
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    borderRadius: 12,
+    backgroundColor: '#002c5f',
+    width: '95%', // aumenta a largura do bloco
+    alignSelf: 'center', // centraliza horizontalmente
+    marginBottom: 8,            
   },
 
   menuButtonText: {
