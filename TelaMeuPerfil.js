@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  Modal,
-  Alert,
-  ActivityIndicator,
+import {View, Text, TouchableOpacity, TextInput, ScrollView, Modal, Alert,
+ActivityIndicator,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from "./Styles";
 import { auth, db, firebase } from "./firebaseConfig";
 
@@ -299,8 +293,9 @@ export default function MeuPerfil({ navigation }) {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.containerMeuPerfil}>
+    <SafeAreaView style={styles.containerMeuPerfil}>
       <Text style={styles.tituloMeuPerfil}>Meu Perfil</Text>
+      <View style={styles.linha} />
 
       <View style={styles.infoViewMeuPerfil}>
         <Text style={styles.tituloInfosMeuPerfil}>Nome</Text>
@@ -395,20 +390,17 @@ export default function MeuPerfil({ navigation }) {
         )}
       </View>
 
-      <View style={styles.containerBotoesNavegacao}>
-        <TouchableOpacity onPress={() => navigation.navigate("MenuPrincipal")}>
+      <View style={[styles.containerBotoesNavegacao, { zIndex: 10, backgroundColor: '#001c44' }]}>
+        <TouchableOpacity onPress={() => navigation.navigate('MenuPrincipal')}>
           <MaterialCommunityIcons name="home" size={30} color="#999999" />
         </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("Atividades")}>
+        <TouchableOpacity onPress={() => navigation.navigate('Atividades')}>
           <MaterialCommunityIcons name="file-document-outline" size={30} color="#999999" />
         </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("Calendario")}>
+        <TouchableOpacity onPress={() => navigation.navigate('Calendario')}>
           <MaterialCommunityIcons name="calendar-month" size={30} color="#999999" />
         </TouchableOpacity>
-
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('MeuPerfil')}>
           <MaterialCommunityIcons name="account" size={30} color="#ffffff" />
         </TouchableOpacity>
       </View>
@@ -470,6 +462,6 @@ export default function MeuPerfil({ navigation }) {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
